@@ -25,20 +25,21 @@ def relu(res:np.ndarray):
 
 
 def list_slider_inputs(label,row_nums=2,col_nums=2):
+    res = np.zeros(shape=(row_nums,col_nums))
+
     cols = st.columns(col_nums)
-    res_2nd=[]
-    for col_ind,_ in enumerate(cols):
-        with cols[col_ind]:
-            res_1st=[]
-            for row_ind in range(row_nums):
-                v=st.slider(f'{label},row_{row_ind},column_{col_ind}',-1.,1.,0.)
-                res_1st.append(v)
-            res_2nd.append(res_1st)
-    return np.array(res_2nd).T
+    for row_ind in range(row_nums):
+        for col_ind,_ in enumerate(cols):
+            with cols[col_ind]:
+                res[row_ind,col_ind]=st.slider(f'{label},row_{row_ind},column_{col_ind}',-1.,1.,0.)
+    return res
 
+_global_count=0
 def perceptron(np_input,activation=step,col_dim_to=1):
-    input_w_theta = list_slider_inputs('w and theta',np_input.shape[1]+1,4)
-
+    global _global_count
+    _global_count+=1
+    input_w_theta = list_slider_inputs(f'{_global_count}w and theta',np_input.shape[1]+1,col_dim_to)
+    
     np_W = np.array(input_w_theta)[:-1,:]
     np_theta = np.array(input_w_theta)[-1,:]
 
@@ -68,16 +69,8 @@ def show_fx(func:Callable):
 all_activation=relu
 
 np_W1,res_activation1 = perceptron(np_X,activation=all_activation,col_dim_to=3)
-#np_W2,res_activation2 = perceptron(np_X,activation=all_activation)
-#res_activation1
-#res_activation2
-#res_1f=np.vstack([res_activation1,res_activation2]).T
-#st.write(res_1f)
-
-#st.write(res_1f.shape)
-#np_Wf,res_activationf = perceptron(res_1f,activation=all_activation)
-
-
+np_W2,res_activation2 = perceptron(res_activation1,activation=all_activation,col_dim_to=2)
+np_W3,res_activation3 = perceptron(res_activation2,activation=all_activation,col_dim_to=2)
 
 fig,ax= plt.subplots(1,1)
 
