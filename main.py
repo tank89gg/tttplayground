@@ -18,11 +18,16 @@ def step(res):
     return np.where(res>0,1,0)
 
 def sigmoid(res:np.ndarray):
-    return 1/(1+np.exp(res*-1))
+    return 1./(1.+np.exp(res*-1))
 
 def relu(res:np.ndarray):
     return np.where(res>0,res,0)
 
+def idenitity(res:np.ndarray):
+    return res
+
+def softmax(res:np.ndarray,by_axis=1):
+    return np.exp(res) / np.expand_dims(np.sum(np.exp(res),axis=by_axis),axis=by_axis)
 
 def list_slider_inputs(label,row_nums=2,col_nums=2):
     res = np.zeros(shape=(row_nums,col_nums))
@@ -41,7 +46,7 @@ def perceptron(np_input,activation=step,col_dim_to=1):
     input_w_theta = list_slider_inputs(f'{_global_count}w and theta',np_input.shape[1]+1,col_dim_to)
     
     np_W = input_w_theta[:-1,:]
-    
+    np_W
     np_theta = np.expand_dims(input_w_theta[-1,:],axis=0)
     res=np.dot(np_input,np_W)
     res=res+np_theta
@@ -74,9 +79,12 @@ all_activation=st.selectbox('activation',options=['step','sigmoid','relu'])
 all_activation=funcs[all_activation]
 
 
+test=softmax(np_X)
+test
+
 np_W1,res_activation1 = perceptron(np_X,activation=all_activation,col_dim_to=3)
 np_W2,res_activation2 = perceptron(res_activation1,activation=all_activation,col_dim_to=2)
-np_W3,res_activation3 = perceptron(res_activation2,activation=all_activation,col_dim_to=2)
+np_W3,res_activation3 = perceptron(res_activation2,activation=idenitity,col_dim_to=2)
 
 fig,ax= plt.subplots(1,1)
 
