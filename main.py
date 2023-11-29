@@ -8,7 +8,7 @@ from typing import Tuple,Callable
 
 rng = np.random.default_rng()
 #np_X = np.array([[n%2,n//2] for n in range(4)])
-np_X = np.array([[1.0,0.5],[0,1]])
+np_X = np.array([[1.0,0.5],[0,1],[3,2]])
 
 np_X
 
@@ -40,9 +40,9 @@ def perceptron(np_input,activation=step,col_dim_to=1):
     _global_count+=1
     input_w_theta = list_slider_inputs(f'{_global_count}w and theta',np_input.shape[1]+1,col_dim_to)
     
-    np_W = np.array(input_w_theta)[:-1,:]
-    np_theta = np.array(input_w_theta)[-1,:]
-
+    np_W = input_w_theta[:-1,:]
+    
+    np_theta = np.expand_dims(input_w_theta[-1,:],axis=0)
     res=np.dot(np_input,np_W)
     res=res+np_theta
     res_activation=activation(res)
@@ -65,8 +65,14 @@ def show_fx(func:Callable):
     fx_range=func(x_range)
     plt.plot(x_range,fx_range)
 
+funcs={
+    'step':step,
+    'sigmoid':sigmoid,
+    'relu':relu
+}
+all_activation=st.selectbox('activation',options=['step','sigmoid','relu'])
+all_activation=funcs[all_activation]
 
-all_activation=relu
 
 np_W1,res_activation1 = perceptron(np_X,activation=all_activation,col_dim_to=3)
 np_W2,res_activation2 = perceptron(res_activation1,activation=all_activation,col_dim_to=2)
