@@ -8,7 +8,7 @@ from typing import Tuple,Callable
 
 rng = np.random.default_rng()
 #np_X = np.array([[n%2,n//2] for n in range(4)])
-np_X = np.array([[1.0,0.5]])
+np_X = np.array([[1.0,0.5],[0,1]])
 
 np_X
 
@@ -34,27 +34,16 @@ def list_slider_inputs(label,row_nums=2,col_nums=2):
                 v=st.slider(f'{label},row_{row_ind},column_{col_ind}',-1.,1.,0.)
                 res_1st.append(v)
             res_2nd.append(res_1st)
-    return res_2nd
+    return np.array(res_2nd).T
 
-
-tdtest=np.array([[[1,2,3],[4,5,6],[1,2,3],[4,5,6]],[[26,33,24],[41,52,63],[1,2,3],[4,5,6]]])
-tdtest.shape
-tdtest
-tdtest_T=tdtest.T
-tdtest_T.shape
-tdtest_T
-_perceptron_temp_num=0
 def perceptron(np_input,activation=step,col_dim_to=1):
-    global _perceptron_temp_num
-    _perceptron_temp_num=_perceptron_temp_num+1
+    input_w_theta = list_slider_inputs('w and theta',np_input.shape[1]+1,4)
 
-    input_w_theta = list_slider_inputs('w and theta',3,4)
+    np_W = np.array(input_w_theta)[:-1,:]
+    np_theta = np.array(input_w_theta)[-1,:]
 
-    np_W = np.array(input_w_theta)
-    np_W
-    return
     res=np.dot(np_input,np_W)
-    res=res+theta_2nddim
+    res=res+np_theta
     res_activation=activation(res)
     res_activation
     return np_W, res_activation
