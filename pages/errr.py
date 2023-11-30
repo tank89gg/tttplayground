@@ -36,12 +36,15 @@ def deriv(func,current_x:float):
     while True:
         delt = delt/2
         slope=numerical_diff(func,current_x,delt)
-        
-        #ax.plot([current_x,current_x+delt],[func(current_x),func(current_x+delt)])
 
         dic_res['slope'].append(slope)
         dic_res['weight'].append(1./delt)
         
+        try:
+            if (diff_slope_pre := dic_res['slope'][-2]-dic_res['slope'][-1])<slope-dic_res['slope'][-1]:
+                st.write('warning')
+        except:
+            pass
 
         yield mean_weight(dic_res['slope'],dic_res['weight'])
 
@@ -49,7 +52,7 @@ def deriv(func,current_x:float):
 inp_slid=st.slider('derivative',-5.,5.,0.,0.01)
 sss=deriv(np.sin,inp_slid)
 
-for ind,val in zip(range(10),sss):
+for ind,val in zip(range(40),sss):
     #ls=np.linspace(-5.,5.,0.01)
     #plt.scatter(ls,np.sin(ls))
     plt.scatter(ind,val)
